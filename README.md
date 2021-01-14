@@ -30,31 +30,44 @@ This project requires that you have already registered a domain and configured a
 * AWS CLI [configured](https://docs.aws.amazon.com/cli/latest/userguide/cli-configure-quickstart.html#cli-configure-quickstart-config)
 * [AWS CDK](https://docs.aws.amazon.com/cdk/latest/guide/getting_started.html)
 
-## Download and Configure
+## Download and Configure (One Time Only)
+All instructions in this section should only need to be executed once when you are initially are setting up the sample.
 ### Clone Repo
 ```bash
 git clone https://github.com/aws-samples/aws-cdk-ecs-windows-fsx
 ```
 
-### Create Python Virtual Environment (One Time Only)
-You need a [Python Virtual Environment](https://docs.python.org/3/library/venv.html) to work in to ensure that the relevant modules are available to the project
+### CDK Bootstrap Environment
+This sample uses features of the AWS CDK that require you to [Bootstrap](https://docs.aws.amazon.com/cdk/latest/guide/bootstrapping.html) your environment (a combination of an AWS account and region).  The sample is configured to use eu-west-1 (Ireland), so you will just need to replace the placeholder in the below command with your [AWS account number](https://docs.aws.amazon.com/general/latest/gr/acct-identifiers.html).
+```bash
+cdk bootstrap aws://ACCOUNT-NUMBER-1/eu-west-1
+```
+
+### Create Python Virtual Environment
+You need a [Python Virtual Environment](https://docs.python.org/3/library/venv.html) to work in to ensure that the relevant modules are available to the sample.  The command must be executed inside the *aws-cdk-ecs-windows-fsx* folder.
 ```bash
 cd aws-cdk-ecs-windows-fsx
 python3 -m venv .venv 
 ```
 
-### Activate Python Virtual Environment
+## Deploy
+### Terminal
+All deployment commands must be executed inside the *aws-cdk-ecs-windows-fsx* folder, navigate there if you haven't already done so.
 ```bash
 cd aws-cdk-ecs-windows-fsx
+```
+### Activate Python Virtual Environment
+```bash
 source .venv/bin/activate
 ```
+The terminal prompt should be prepended with a **(.venv)** if you have activated the python virtual environment correctly.  You need to activate the virtual environment each time you start a new terminal session.
 
 ### Install Python modules
 ```bash 
 pip3 install -r requirements.txt
 ```
 
-## Deploy
+### Website
 1. Deploy the project using the following command in the root of the aws-cdk-ecs-windows-fsx folder (replacing the zone_name and hosted_zone_id with the correct values for your environment)
 ``` bash
 cdk deploy cdk-ecs-windows-website1 --context zone_name="example.com" --context hosted_zone_id="Z0123456789ABCDEFGHIJ"
@@ -63,7 +76,7 @@ cdk deploy cdk-ecs-windows-website1 --context zone_name="example.com" --context 
 3. Visit the URL output by CDK e.g. https://website1.example.com
 4. Each time a task/container is launched it will write it's task id to the shared file in the FSx share, you can force this by manually terminating a task in the ECS console and the service will launch a replacement.
 
-## Bastion
+### Bastion
 1. You can deploy a bastion instance to administer Active Directory and the FSx share contents with this command
 ``` bash
 cdk deploy cdk-ecs-windows-bastion --context zone_name="example.com" --context hosted_zone_id="Z0123456789ABCDEFGHIJ"
@@ -71,7 +84,7 @@ cdk deploy cdk-ecs-windows-bastion --context zone_name="example.com" --context h
 2. Once deployed you will have to manually add your home/office IP to the Instance's security group.
 
 ## Clean Up
-1. When you are finished, you can delete all the stack with the following command
+1. When you are finished, you can delete all the stacks with the following command
 ``` bash
 cdk destroy cdk-ecs-windows-website1 cdk-ecs-windows-bastion cdk-ecs-windows-cluster --context zone_name="example.com" --context hosted_zone_id="Z0123456789ABCDEFGHIJ"
 ```
